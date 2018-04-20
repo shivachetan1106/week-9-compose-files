@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.6
+    #command: /home/chetan/test/init.sh
+    container_name: database
+    #command: mysqld --user=root
+    build: ./sql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: recipes_database
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306"
+    expose:
+      - "3306"
+  web:
+    image: php:7.2.2-apache
+    container_name: php_web
+    build: /home/chetan/test
+    depends_on:
+      - db
+    volumes:
+      - ./php/:/var/www/html/
+    ports:
+      - "8100:80"
+    stdin_open: true
+    tty: true
+    expose:
+        - "8100"
+        - "80"
+        - "443"
